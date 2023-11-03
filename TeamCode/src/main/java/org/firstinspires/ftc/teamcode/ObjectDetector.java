@@ -117,7 +117,7 @@ public class ObjectDetector extends OpenCvPipeline {
         //telemetry.update();
 
         //turns everything that not the color we look for into black
-        Imgproc.cvtColor(mat, bluemat, Imgproc.COLOR_GRAY2RGB);
+        Imgproc.cvtColor(bluemat, mat, Imgproc.COLOR_GRAY2RGB);
 
         // color of rectangles in camera stream
         Scalar colorStone = new Scalar(255, 0, 0);

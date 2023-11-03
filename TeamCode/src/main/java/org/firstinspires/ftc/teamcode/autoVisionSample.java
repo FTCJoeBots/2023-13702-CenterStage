@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.tuning.Lift;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -27,6 +30,11 @@ public class autoVisionSample extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        Pose2d startPose = new Pose2d(-65,36, Math.toRadians(90));
+
+        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        Lift lift = new Lift();
 
         telemetry.addLine("Press > to Start");
         telemetry.update();
@@ -91,6 +99,10 @@ while(!isStarted()) {
         telemetry.addLine("All done.  Press stop.");
         telemetry.update();
 
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                    //    .
+                        .build());
 
 
     }

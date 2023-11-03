@@ -1,75 +1,41 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
 public class Lift {
 
-    final int ground = 200;
-    final int low = 1230;
-    final int med = 2100;
-    final int high = 2950;
-    final int initPos = 0;
+    public static final double LIFT_SPEED=.1;
+    public static final int LIFT_MANUAL_INCREMENT=30;
+    DcMotor LeftLift;
+    DcMotor RightLift;
 
+    int ground = 0;
+    int low = 1000;
+    int med = 2000;
+    int high = 3000;
 
+    int LIFTMAXIMUM = 3000;
+    int LIFTMINIMUM = 0;
+    int lift_target_position=0;
 
-    final int LIFTMAXIMUM = 3325;
-    final int LIFTMINUMMUM = -100;
-
-    private int lift_target_position = 0;
-
-
-
-
-
-    DcMotor liftMotor;
-
-
-
-
-    //public testLift(HardwareMap hwMap) {
-    public void init(HardwareMap hwMap) {
-        liftMotor = hwMap.get(DcMotor.class, "lift");
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setTargetPosition(LIFTMINUMMUM);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(0);
-
+    public void init(HardwareMap hwMap){
+        LeftLift = hwMap.get(DcMotor.class,"LeftLift");
+        LeftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftLift.setTargetPosition(LIFTMINIMUM);
+        LeftLift.setDirection(DcMotor.Direction.FORWARD);
+        LeftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftLift.setPower(0);
+        RightLift = hwMap.get(DcMotor.class,"RightLift");
+        RightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightLift.setDirection(DcMotor.Direction.REVERSE);
+        RightLift.setTargetPosition(LIFTMINIMUM);
+        RightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightLift.setPower(0);
     }
 
-
-
-
-
-
-    public void controller() {
-        if (lift_target_position < LIFTMINUMMUM)
-            lift_target_position = LIFTMINUMMUM;
-
-        if (lift_target_position > LIFTMAXIMUM)
-            lift_target_position = LIFTMAXIMUM;
-
-        liftMotor.setTargetPosition(lift_target_position);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(1);
-
-
-    }
-
-
-    public void raiseLiftManual(){
-        lift_target_position = liftMotor.getCurrentPosition()+120;
-    }
-    public void lowerLiftManual(){
-        lift_target_position=liftMotor.getCurrentPosition()-120;
-    }
-
-    public int getLiftTargetPosition(){
-        return lift_target_position;
-    }
-
-    public void Lift_To_Position(int LiftPosition) {
-        switch (LiftPosition) {
+    public void Lift_to_Pos(int liftPositions){
+        switch (liftPositions){
             case 0:
                 lift_target_position = ground;
                 break;
@@ -81,15 +47,31 @@ public class Lift {
                 break;
             case 3:
                 lift_target_position = high;
-                break;
-            case 4:
-                lift_target_position = initPos;
-                break;
-            case 5:
+
 
         }
+
     }
 
-    public double getLiftPosition(){ return liftMotor.getCurrentPosition(); }
+    public void contorller(){
+        LeftLift.setTargetPosition(lift_target_position);
+        LeftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftLift.setPower(LIFT_SPEED);
+        RightLift.setTargetPosition(lift_target_position);
+        RightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightLift.setPower(LIFT_SPEED);
+    }
+
+    public void raiseLiftManual(){
+        lift_target_position = LeftLift.getCurrentPosition()+LIFT_MANUAL_INCREMENT;
+        lift_target_position = RightLift.getCurrentPosition()+LIFT_MANUAL_INCREMENT;
+    }
+
+    public void lowerLiftManual(){
+        lift_target_position = LeftLift.getCurrentPosition()-LIFT_MANUAL_INCREMENT;
+        lift_target_position = RightLift.getCurrentPosition()-LIFT_MANUAL_INCREMENT;
+    }
+
 
 }
+
