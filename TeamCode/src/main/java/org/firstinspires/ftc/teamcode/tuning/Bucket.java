@@ -10,14 +10,15 @@ public class Bucket {
     final double ClosedBucket = 0;
     final double OpenBucket = 0.5;
 
-    private static final double InBucket = 0.5;
-    private static final double OutBucket = -0.3;
+    ///init to .4
+    private static final double InBucket = 0.45;
+    private static final double OutBucket = 0.2;
 
     static boolean BucketInB = false;
 
 
-    private static final double ClosedBucketGate = 0;
-    private static final double OpenBucketGate = 0.5;
+    private static final double ClosedBucketGate = 0.8;
+    private static final double OpenBucketGate = 0.58;
 
     static boolean BucketGateClosedB = false;
 
@@ -44,18 +45,19 @@ public class Bucket {
     public void init(HardwareMap hwMap, BucketStartPosition BSP, BucketGateStartPosition BGSP) {
         Bucket = hwMap.get(Servo.class,"Bucket");
         BucketGate = hwMap.get(Servo.class,"BucketGate");
+        Bucket.setPosition(InBucket);
+        BucketGate.setPosition(ClosedBucketGate);
+   //     if (BSP == BucketStartPosition.IN) {
+   //         Bucket.setPosition(IntakeSide);
+   //     } else if (BSP == BucketStartPosition.OUT) {
+   //         Bucket.setPosition(OutputSide);
+   //     }
 
-        if (BSP == BucketStartPosition.IN) {
-            Bucket.setPosition(IntakeSide);
-        } else if (BSP == BucketStartPosition.OUT) {
-            Bucket.setPosition(OutputSide);
-        }
-
-        if (BGSP == BucketGateStartPosition.CLOSE) {
-            BucketGateIn();
-        } else if (BGSP == BucketGateStartPosition.OPEN) {
-            BucketGateOut();
-        }
+   //     if (BGSP == BucketGateStartPosition.CLOSE) {
+   //         BucketGateIn();
+   //     } else if (BGSP == BucketGateStartPosition.OPEN) {
+   //         BucketGateOut();
+   //     }
 
     }
 

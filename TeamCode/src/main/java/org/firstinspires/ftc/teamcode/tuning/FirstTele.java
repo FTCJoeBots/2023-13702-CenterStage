@@ -55,7 +55,7 @@ public class FirstTele extends LinearOpMode {
         intake.init(hardwareMap);
         lift.init(hardwareMap);
         //shooter.init(hardwareMap);
-        bucketFunctions.init(hardwareMap, Bucket.BucketStartPosition.IN, Bucket.BucketGateStartPosition.CLOSE);
+        bucketFunctions.init(hardwareMap, Bucket.BucketStartPosition.OUT, Bucket.BucketGateStartPosition.CLOSE);
 
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
@@ -95,8 +95,21 @@ public class FirstTele extends LinearOpMode {
             //BucketGate: Left Trigger
             //Shooter: ??
 
+
+            if (gamepad2.x){
+                intake.Intake_stop();
+                intake.Intake_start();
+            }
+            if (gamepad2.a){
+
+                intake.Intake_stop();
+            }
+            if (gamepad2.b){
+                intake.Intake_stop();
+                intake.inverse();
+            }
             //Intake
-            nowIntake = gamepad2.y;
+            /*nowIntake = gamepad2.y;
             if (nowIntake && nowIntake != preIntake) {
                 // Normal suction
                 if (stateIntake == 1) {
@@ -119,7 +132,7 @@ public class FirstTele extends LinearOpMode {
                 previoiusPressedIntake = true;
             }
             preIntake = nowIntake;
-
+*/
             //Lift
 
 
@@ -195,8 +208,13 @@ public class FirstTele extends LinearOpMode {
             //telemetry.addData("BucketEncoders",Bucket.getBucketPosition());
 
 
-            if(gamepad2.right_trigger == 1){
-                bucketFunctions.ToggleBucket();
+            if(gamepad2.right_trigger >= .7){
+                if(lift.LeftLift.getCurrentPosition()>190) {
+                    bucketFunctions.BucketOut();
+                }
+
+            } else {
+                bucketFunctions.BucketIn();
             }
 
             //Cur = gamepad1.j;
@@ -207,8 +225,10 @@ public class FirstTele extends LinearOpMode {
             //BucketGate
             // telemetry.addData("BucketGateEncoders",Bucket.getGatePosition());
 
-            if (gamepad2.left_trigger == 1) {
-                bucketFunctions.ToggleBucketGate();
+            if (gamepad2.left_trigger >= .7) {
+                bucketFunctions.BucketGateOut();
+            } else {
+                bucketFunctions.BucketGateIn();
             }
 
 

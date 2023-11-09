@@ -1,26 +1,30 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.tuning.Intake;
 import org.firstinspires.ftc.teamcode.tuning.Lift;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
 
 /**
  * This is sample code used to explain how to write an autonomous code
  *
  */
 
-@Autonomous(name="Vision Sample", group="Pushbot")
+@Autonomous(name="BlueLeftAutoTest", group="Pushbot")
 
-public class autoVisionSample extends LinearOpMode {
+public class BlueLeftAutoTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     OpenCvCamera webcam;
@@ -31,9 +35,14 @@ public class autoVisionSample extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(-65,36, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-65,36, Math.toRadians(-90));
+        Pose2d Pose1 = new Pose2d(-20, 32, Math.toRadians(-90));
+        Pose2d Pose2 = new Pose2d(-17, 75, Math.toRadians(-90));
+        Intake intake = new Intake();
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        MecanumDrive drive1 = new MecanumDrive(hardwareMap, Pose1);
+        MecanumDrive drive2 = new MecanumDrive(hardwareMap, Pose2);
         Lift lift = new Lift();
 
         telemetry.addLine("Press > to Start");
@@ -68,43 +77,60 @@ public class autoVisionSample extends LinearOpMode {
             }
         });
         //telemetry.addData("location:",OD.getIntLocation());
-//Put this in a loop to run before we press start (?)
+        //Put this in a loop to run before we press start (?)
         //  Or do this right after we press start
         //
-while(!isStarted()) {
-    if (OD.getIntLocation() == 2) {
-        telemetry.addData("Location", OD.getIntLocation());
-        telemetry.addLine("RIGHT");
-        telemetry.update();
-        sleep(30);
-    } else if (OD.getIntLocation() == 1) {
-        telemetry.addLine("CENTER");
-        telemetry.update();
-        sleep(30);
-
-    } else {
-        telemetry.addData("Location", OD.getIntLocation());
-        telemetry.addLine("LEFT");
-        telemetry.update();
-        sleep(30);
-    }
-}
+        while(!isStarted()) {
+            if (OD.getIntLocation() == 2) {
+                telemetry.addData("Location", OD.getIntLocation());
+                telemetry.addLine("RIGHT");
+                telemetry.update();
+                sleep(30);
+            }
+            else if (OD.getIntLocation() == 1) {
+                telemetry.addLine("CENTER");
+                telemetry.update();
+                sleep(30);
+            }
+            else {
+                telemetry.addData("Location", OD.getIntLocation());
+                telemetry.addLine("LEFT");
+                telemetry.update();
+                sleep(30);
+            }
+        }
         waitForStart();
         telemetry.addLine("Ending vision detection...");
         telemetry.update();
 
         sleep(5000);
-
-
         telemetry.addLine("All done.  Press stop.");
         telemetry.update();
+        if (OD.getIntLocation() == 3) { // Right (Gone)
+            Actions.runBlocking(new SequentialAction(
+                    drive.actionBuilder(drive.pose)
+                            .setTangent(0)
+                            .strafeToLinearHeading(new Vector2d(-25, 27), Math.toRadians(-65))
+                            .build(),
 
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                    //    .
-                        .build());
+                    intake.Intake_inverse(),
+
+                    drive.actionBuilder(drive1.pose)
+                            .waitSeconds(2)
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-17.0, 75.0, Math.toRadians(-75)), 0)
+                            .build(),
 
 
+                    drive.actionBuilder(drive2.pose)
+                            .waitSeconds(2)
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(0.0, 0.0, Math.toRadians(-75)), 0)
+                            .splineToLinearHeading(new Pose2d(0.0, -80.0, Math.toRadians(-75)), 0)
+                            .build()
+            ));
+
+
+        }
     }
-
 }

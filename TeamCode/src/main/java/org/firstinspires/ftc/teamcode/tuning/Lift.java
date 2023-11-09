@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 public class Lift {
 
-    public static final double LIFT_SPEED=.1;
+    public static final double LIFT_SPEED=.25;
     public static final int LIFT_MANUAL_INCREMENT=30;
     DcMotor LeftLift;
     DcMotor RightLift;
@@ -68,8 +68,17 @@ public class Lift {
     }
 
     public void lowerLiftManual(){
-        lift_target_position = LeftLift.getCurrentPosition()-LIFT_MANUAL_INCREMENT;
-        lift_target_position = RightLift.getCurrentPosition()-LIFT_MANUAL_INCREMENT;
+
+        int newTargetLeftLiftPosition = LeftLift.getCurrentPosition()-LIFT_MANUAL_INCREMENT;
+        int newTargetRightLiftPosition = RightLift.getCurrentPosition()-LIFT_MANUAL_INCREMENT;
+
+        if(newTargetLeftLiftPosition <= 0 || newTargetRightLiftPosition <= 0){
+            lift_target_position = LIFTMINIMUM;
+        }
+        else{
+            lift_target_position = newTargetLeftLiftPosition;
+            lift_target_position = newTargetRightLiftPosition;
+        }
     }
 
 
