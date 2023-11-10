@@ -11,8 +11,8 @@ public class Bucket {
     final double OpenBucket = 0.5;
 
     ///init to .4
-    private static final double InBucket = 0.45;
-    private static final double OutBucket = 0.2;
+    private static final double InBucket = 0.48;
+    private static final double OutBucket = 0.1;
 
     static boolean BucketInB = false;
 
