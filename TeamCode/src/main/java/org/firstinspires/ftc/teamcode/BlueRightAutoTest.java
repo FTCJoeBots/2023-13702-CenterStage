@@ -23,13 +23,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  *
  */
 
-@Autonomous(name="RedRightAutoTest", group="Pushbot")
+@Autonomous(name="BlueRightAutoTest", group="Pushbot")
 
-public class RedRightAutoTest extends LinearOpMode {
+public class BlueRightAutoTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     OpenCvCamera webcam;
-    RedObjectDetector OD = new RedObjectDetector(telemetry);
+    ObjectDetector OD = new ObjectDetector(telemetry);
     private ElapsedTime     runtime = new ElapsedTime();
 
 
@@ -112,35 +112,14 @@ public class RedRightAutoTest extends LinearOpMode {
             Actions.runBlocking(new SequentialAction(
                     drive.actionBuilder(drive.pose)
                             .setTangent(0)
-                       //     .strafeToLinearHeading(new Vector2d(13, 24), Math.toRadians(90))
-                          //Right position
+                            //     .strafeToLinearHeading(new Vector2d(13, 24), Math.toRadians(90))
+                            //Right position
                             //  .strafeToLinearHeading(new Vector2d(37, 10), Math.toRadians(0))
                             //center
                             //.strafeToLinearHeading(new Vector2d(44, 20), Math.toRadians(20))
-                           ///and two for the left
+                            ///and two for the left
                             .strafeToLinearHeading(new Vector2d(12,10),Math.toRadians(40))
-                            .strafeToLinearHeading(new Vector2d(28,36),Math.toRadians(90))
-                            .build(),
-            //drop the element
-                    intake.Intake_inverse(),
-
-
-                    //this is for left parking
-                    //reposed to 0,0 so this is relative to where the first one ended
-                    drive.actionBuilder(drive1.pose)
-                            .waitSeconds(2)
-                            .strafeToLinearHeading(new Vector2d(0,-63),Math.toRadians(-90))
-                            .build()
-
-
-                                ));
-
-
-        } if (OD.getIntLocation() == 1) { //Middle Spike
-            Actions.runBlocking(new SequentialAction(
-                    drive.actionBuilder(drive.pose)
-                            .setTangent(0)
-                            .strafeToLinearHeading(new Vector2d(37, 12.5), Math.toRadians(20))
+                            .strafeToLinearHeading(new Vector2d(24,36),Math.toRadians(100))
                             .build(),
                     //drop the element
                     intake.Intake_inverse(),
@@ -150,7 +129,28 @@ public class RedRightAutoTest extends LinearOpMode {
                     //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
                             .waitSeconds(2)
-                            .strafeToLinearHeading(new Vector2d(0,-63),Math.toRadians(90))
+                            .strafeToLinearHeading(new Vector2d(0,-60),Math.toRadians(-90))
+                            .build()
+
+
+            ));
+
+
+        } if (OD.getIntLocation() == 1) { //Middle Spike
+            Actions.runBlocking(new SequentialAction(
+                    drive.actionBuilder(drive.pose)
+                            .setTangent(0)
+                            .strafeToLinearHeading(new Vector2d(38, 12.5), Math.toRadians(20))
+                            .build(),
+                    //drop the element
+                    intake.Intake_inverse(),
+
+
+                    //this is for left parking
+                    //reposed to 0,0 so this is relative to where the first one ended
+                    drive.actionBuilder(drive1.pose)
+                            .waitSeconds(2)
+                            .strafeToLinearHeading(new Vector2d(0,-50),Math.toRadians(90))
                             .build()
 
 
@@ -170,7 +170,7 @@ public class RedRightAutoTest extends LinearOpMode {
                     //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
                             .waitSeconds(2)
-                            .strafeToLinearHeading(new Vector2d(0, -58), Math.toRadians(90)) //needs to change
+                            .strafeToLinearHeading(new Vector2d(0, -25), Math.toRadians(90)) //needs to change
                             .build()
 
 
@@ -178,3 +178,4 @@ public class RedRightAutoTest extends LinearOpMode {
         }
     }
 }
+
