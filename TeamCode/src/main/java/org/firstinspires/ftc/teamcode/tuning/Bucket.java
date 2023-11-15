@@ -11,7 +11,7 @@ public class Bucket {
     final double OpenBucket = 0.5;
 
     ///init to .4
-    private static final double InBucket = 0.48;
+    private static final double InBucket = 0.47;
     private static final double OutBucket = 0.1;
 
     static boolean BucketInB = false;
@@ -129,6 +129,8 @@ public class Bucket {
         }
     }
 
-    public static double getGatePosition(){ return BucketGate.getPosition(); }
+    public static double getGatePosition(){
+        return BucketGate.getPosition();
+    }
 
 }

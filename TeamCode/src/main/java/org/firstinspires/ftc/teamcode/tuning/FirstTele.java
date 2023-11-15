@@ -90,12 +90,26 @@ public class FirstTele extends LinearOpMode {
 
             //Intake: Y
             //Manual Lift: Right Bumper (up), Left Bumper (down)
-            //Lift Postions: dpad down (ground), dpad left (1), dpad right (2), dpad up (3)
+            //Lift Positions: dpad down (ground), dpad left (1), dpad right (2), dpad up (3)
             //Bucket: Right Trigger
             //BucketGate: Left Trigger
             //Shooter: ??
+            //hanger
+            if (gamepad1.b){
+                lift.resetHanger();
+                lift.Hcheck();
+            }
+            if (gamepad1.y){
+                lift.upHanger();
+                lift.Hcheck();
 
+            }
+            if (gamepad1.x){
+                lift.zeroHanger();
+                lift.Hcheck();
 
+            }
+            //intake
             if (gamepad2.x){
                 intake.Intake_stop();
                 intake.Intake_start();
@@ -108,7 +122,7 @@ public class FirstTele extends LinearOpMode {
                 intake.Intake_stop();
                 intake.inverse();
             }
-            //Intake
+
             /*nowIntake = gamepad2.y;
             if (nowIntake && nowIntake != preIntake) {
                 // Normal suction

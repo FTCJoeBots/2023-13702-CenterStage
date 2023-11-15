@@ -129,7 +129,7 @@ public class BlueRightAutoTest extends LinearOpMode {
                     //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
                             .waitSeconds(2)
-                            .strafeToLinearHeading(new Vector2d(0,-60),Math.toRadians(-90))
+                            .strafeToLinearHeading(new Vector2d(-22,-10),Math.toRadians(-90))
                             .build()
 
 
@@ -150,7 +150,7 @@ public class BlueRightAutoTest extends LinearOpMode {
                     //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
                             .waitSeconds(2)
-                            .strafeToLinearHeading(new Vector2d(0,-50),Math.toRadians(90))
+                            .strafeToLinearHeading(new Vector2d(0,-20),Math.toRadians(90))
                             .build()
 
 
@@ -170,7 +170,7 @@ public class BlueRightAutoTest extends LinearOpMode {
                     //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
                             .waitSeconds(2)
-                            .strafeToLinearHeading(new Vector2d(0, -25), Math.toRadians(90)) //needs to change
+                            .strafeToLinearHeading(new Vector2d(0, -10), Math.toRadians(10)) //needs to change
                             .build()
 
 

@@ -28,14 +28,14 @@ public class BlueLeftAutoTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     OpenCvCamera webcam;
-    ObjectDetector OD = new ObjectDetector(telemetry);
+    BlueLeftObjectDetector OD = new BlueLeftObjectDetector(telemetry);
     private ElapsedTime     runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(-65,36, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(0,0, Math.toRadians(-90));
         Pose2d Pose1 = new Pose2d(-20, 32, Math.toRadians(-90));
         Pose2d Pose2 = new Pose2d(-17, 75, Math.toRadians(-90));
         Intake intake = new Intake();
@@ -44,7 +44,8 @@ public class BlueLeftAutoTest extends LinearOpMode {
         MecanumDrive drive1 = new MecanumDrive(hardwareMap, Pose1);
         MecanumDrive drive2 = new MecanumDrive(hardwareMap, Pose2);
         Lift lift = new Lift();
-
+        intake.init(hardwareMap);
+        lift.init(hardwareMap);
         telemetry.addLine("Press > to Start");
         telemetry.update();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -103,19 +104,20 @@ public class BlueLeftAutoTest extends LinearOpMode {
         telemetry.addLine("Ending vision detection...");
         telemetry.update();
 
-        sleep(5000);
+        sleep(500);
         telemetry.addLine("All done.  Press stop.");
         telemetry.update();
-        if (OD.getIntLocation() == 3) { // Right (Gone)
+        if (OD.getIntLocation() == 2) { // Right
             Actions.runBlocking(new SequentialAction(
                     drive.actionBuilder(drive.pose)
                             .setTangent(0)
-                            .strafeToLinearHeading(new Vector2d(-25, 27), Math.toRadians(-65))
-                            .build(),
+                            .strafeToLinearHeading(new Vector2d(29, 15), Math.toRadians(-65))
+                            .strafeToLinearHeading(new Vector2d(35, 6), Math.toRadians(-65))
+                            .build()
 
-                    intake.Intake_inverse(),
+                    // intake.Intake_inverse(),
 
-                    drive.actionBuilder(drive1.pose)
+                   /* drive.actionBuilder(drive1.pose)
                             .waitSeconds(2)
                             .setTangent(0)
                             .splineToLinearHeading(new Pose2d(-17.0, 75.0, Math.toRadians(-75)), 0)
@@ -127,10 +129,59 @@ public class BlueLeftAutoTest extends LinearOpMode {
                             .setTangent(0)
                             .splineToLinearHeading(new Pose2d(0.0, 0.0, Math.toRadians(-75)), 0)
                             .splineToLinearHeading(new Pose2d(0.0, -80.0, Math.toRadians(-75)), 0)
-                            .build()
+                            .build()*/
             ));
+        }
+            if (OD.getIntLocation() == 1) { // Center
+                Actions.runBlocking(new SequentialAction(
+                        drive.actionBuilder(drive.pose)
+                                .setTangent(0)
+                                .strafeToLinearHeading(new Vector2d(41, 43), Math.toRadians(-65))
+                                //.strafeToLinearHeading(new Vector2d(41, 38), Math.toRadians(-65))
+                                .build()
+
+                        // intake.Intake_inverse(),
+
+                   /* drive.actionBuilder(drive1.pose)
+                            .waitSeconds(2)
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-17.0, 75.0, Math.toRadians(-75)), 0)
+                            .build(),
 
 
+                    drive.actionBuilder(drive2.pose)
+                            .waitSeconds(2)
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(0.0, 0.0, Math.toRadians(-75)), 0)
+                            .splineToLinearHeading(new Pose2d(0.0, -80.0, Math.toRadians(-75)), 0)
+                            .build()*/
+                ));
+            }
+                if (OD.getIntLocation() == 0) { // Left
+                    Actions.runBlocking(new SequentialAction(
+                            drive.actionBuilder(drive.pose)
+                                    .setTangent(0)
+                                    .strafeToLinearHeading(new Vector2d(29, 47), Math.toRadians(-65))
+                                    .strafeToLinearHeading(new Vector2d(35, 42), Math.toRadians(-65))
+                                    .build()
+
+                            // intake.Intake_inverse(),
+
+                   /* drive.actionBuilder(drive1.pose)
+                            .waitSeconds(2)
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-17.0, 75.0, Math.toRadians(-75)), 0)
+                            .build(),
+
+
+                    drive.actionBuilder(drive2.pose)
+                            .waitSeconds(2)
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(0.0, 0.0, Math.toRadians(-75)), 0)
+                            .splineToLinearHeading(new Pose2d(0.0, -80.0, Math.toRadians(-75)), 0)
+                            .build()*/
+                    ));
+                }
         }
     }
-}
+//}

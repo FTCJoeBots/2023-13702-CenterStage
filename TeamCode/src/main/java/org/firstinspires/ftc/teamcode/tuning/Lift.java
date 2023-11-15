@@ -18,6 +18,13 @@ public class Lift {
     int LIFTMAXIMUM = 3000;
     int LIFTMINIMUM = 0;
     int lift_target_position=0;
+    private int hanger_target_position;
+    double HANGER_SPEED = 0.75;
+    static boolean HangerDown = false;
+
+
+    DcMotor hangerM;
+
 
     public void init(HardwareMap hwMap){
         LeftLift = hwMap.get(DcMotor.class,"LeftLift");
@@ -32,6 +39,12 @@ public class Lift {
         RightLift.setTargetPosition(LIFTMINIMUM);
         RightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightLift.setPower(0);
+
+        hangerM = hwMap.get(DcMotor.class,"Hanger");
+        hangerM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangerM.setDirection(DcMotor.Direction.REVERSE);
+        hangerM.setTargetPosition(0);
+
     }
 
     public void Lift_to_Pos(int liftPositions){
@@ -62,6 +75,12 @@ public class Lift {
         RightLift.setPower(LIFT_SPEED);
     }
 
+    public void Hcheck() {
+        hangerM.setTargetPosition(hanger_target_position);
+        hangerM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hangerM.setPower(HANGER_SPEED);
+    }
+
     public void raiseLiftManual(){
         lift_target_position = LeftLift.getCurrentPosition()+LIFT_MANUAL_INCREMENT;
         lift_target_position = RightLift.getCurrentPosition()+LIFT_MANUAL_INCREMENT;
@@ -80,7 +99,35 @@ public class Lift {
             lift_target_position = newTargetRightLiftPosition;
         }
     }
+    public void resetHanger(){
+        hanger_target_position = 1500;
+        HangerDown=false;
+    }
+    public void upHanger(){
+        hanger_target_position = 4400;
+        HangerDown=true;
 
+    }
+    public void zeroHanger(){
+        hanger_target_position = 0;
+
+    }
+    public void Zero(){
+        hanger_target_position = 0;
+    }
+    public int getHangerTargetPosition(){
+        return hanger_target_position;
+    }
+
+    public  void toggleHanger() {
+        if (HangerDown) {
+            resetHanger();
+        } else {
+            upHanger();
+        }
+
+
+    }
 
 }
 
