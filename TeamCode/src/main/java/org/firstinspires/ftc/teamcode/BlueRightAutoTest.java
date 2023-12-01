@@ -122,7 +122,7 @@ public class BlueRightAutoTest extends LinearOpMode {
                             .strafeToLinearHeading(new Vector2d(24,36),Math.toRadians(100))
                             .build(),
                     //drop the element
-                    intake.Intake_inverse(),
+                    intake.AutoIntake_inverse(),
 
 
                     //this is for left parking
@@ -143,7 +143,7 @@ public class BlueRightAutoTest extends LinearOpMode {
                             .strafeToLinearHeading(new Vector2d(38, 12.5), Math.toRadians(20))
                             .build(),
                     //drop the element
-                    intake.Intake_inverse(),
+                    intake.AutoIntake_inverse(),
 
 
                     //this is for left parking
@@ -163,7 +163,7 @@ public class BlueRightAutoTest extends LinearOpMode {
                             .strafeToLinearHeading(new Vector2d(26, 1), Math.toRadians(0))
                             .build(),
                     //drop the element
-                    intake.Intake_inverse(),
+                    intake.AutoIntake_inverse(),
 
 
                     //this is for left parking

@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Intake {
 
     DcMotor motor;
-    public final double INTAKE_SPEED = .5;
-
+    public final double INTAKE_SPEED = .7;
+    public final double AUTOINTAKE_SPEED = .5;
     public void init(HardwareMap hwmap){
 
         motor = hwmap.get(DcMotor.class, "intakeM");
@@ -20,18 +20,18 @@ public class Intake {
     public void Intake_stop(){ motor.setPower(0); }
     public void Intake_start(){ motor.setPower(-INTAKE_SPEED); }
     public void inverse(){ motor.setPower(INTAKE_SPEED); }
-
-    public class InverseIntake implements Action {
+    public void autoinverse(){ motor.setPower(AUTOINTAKE_SPEED); }
+    public class AutoInverseIntake implements Action {
         public void init(){
-            inverse();
+            autoinverse();
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            inverse();
+            autoinverse();
             return false;
         }
     }
-    public Action Intake_inverse() {
-        return new Intake.InverseIntake();
+    public Action AutoIntake_inverse() {
+        return new Intake.AutoInverseIntake();
     }
 }

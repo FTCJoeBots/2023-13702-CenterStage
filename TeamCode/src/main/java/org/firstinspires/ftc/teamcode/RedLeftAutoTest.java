@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -10,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.tuning.Bucket;
 import org.firstinspires.ftc.teamcode.tuning.Intake;
 import org.firstinspires.ftc.teamcode.tuning.Lift;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -23,13 +23,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  *
  */
 
-@Autonomous(name="BlueLeftAutoTest123", group="Pushbot")
+@Autonomous(name="RedLeftAutoTest", group="Pushbot")
 
-public class BlueLeftAutoTest extends LinearOpMode {
+public class RedLeftAutoTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     OpenCvCamera webcam;
-    BlueLeftObjectDetector OD = new BlueLeftObjectDetector(telemetry);
+    RedLeftObjectDetector OD = new RedLeftObjectDetector(telemetry);
     private ElapsedTime     runtime = new ElapsedTime();
 
 
@@ -37,22 +37,17 @@ public class BlueLeftAutoTest extends LinearOpMode {
     public void runOpMode() {
 
         Pose2d startPose = new Pose2d(0,0, Math.toRadians(-90));
-        Pose2d Pose1 = new Pose2d(0.01, 0.01, Math.toRadians(-90));
-        Pose2d Pose05 = new Pose2d(0.02, 0.02, Math.toRadians(-90));
-        Pose2d Pose2 = new Pose2d(-17, 75, Math.toRadians(-90));
+        Pose2d Pose1 = new Pose2d(0,0, Math.toRadians(90));
+        Pose2d Pose2 = new Pose2d(-17, 75, Math.toRadians(90));
         Intake intake = new Intake();
-        Lift lift = new Lift();
-        Bucket bucket = new Bucket();
-
-
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
         MecanumDrive drive1 = new MecanumDrive(hardwareMap, Pose1);
-        MecanumDrive drive05 = new MecanumDrive(hardwareMap, Pose05);
         MecanumDrive drive2 = new MecanumDrive(hardwareMap, Pose2);
+        Lift lift = new Lift();
+
+        //Initialize everything
         intake.init(hardwareMap);
         lift.init(hardwareMap);
-        bucket.init(hardwareMap, Bucket.BucketStartPosition.OUT, Bucket.BucketGateStartPosition.CLOSE);
-
         telemetry.addLine("Press > to Start");
         telemetry.update();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -96,9 +91,7 @@ public class BlueLeftAutoTest extends LinearOpMode {
                 sleep(30);
             }
             else if (OD.getIntLocation() == 1) {
-                telemetry.addData("Location", OD.getIntLocation());
                 telemetry.addLine("CENTER");
-                telemetry.speak("Quack");
                 telemetry.update();
                 sleep(30);
             }
@@ -113,127 +106,84 @@ public class BlueLeftAutoTest extends LinearOpMode {
         telemetry.addLine("Ending vision detection...");
         telemetry.update();
 
-        sleep(500);
         telemetry.addLine("All done.  Press stop.");
         telemetry.update();
-
-        if (OD.getIntLocation() == 0) { // Left
+        if (OD.getIntLocation() == 0) { // Left (Gone)
             Actions.runBlocking(new SequentialAction(
                     drive.actionBuilder(drive.pose)
                             .setTangent(0)
-                            //moves robot to the spike
-                            .strafeToLinearHeading(new Vector2d(29, 47), Math.toRadians(-65))
-                            .strafeToLinearHeading(new Vector2d(35, 41), Math.toRadians(-65))
+                            //     .strafeToLinearHeading(new Vector2d(13, 24), Math.toRadians(90))
+                            //Right position
+                            //  .strafeToLinearHeading(new Vector2d(37, 10), Math.toRadians(0))
+                            //center
+                            //.strafeToLinearHeading(new Vector2d(44, 20), Math.toRadians(20))
+                            ///and two for the left
+                            .strafeToLinearHeading(new Vector2d(11, 38), Math.toRadians(-20))
+                            .strafeToLinearHeading(new Vector2d(22, 34), Math.toRadians(-30))
                             .build(),
-                            //moves intake
-                            intake.AutoIntake_inverse(),
-                    //waits
-                    drive.actionBuilder(drive05.pose)
-                            .waitSeconds(2)
-                            .build(),
-                    //lift up
-                    lift.Pos1(),
-                    drive.actionBuilder(drive05.pose)
-                            .waitSeconds(0.7)
-                            .build(),
-                    //bucket moves up
-                    bucket.bPos0(),
-                    //moves to backdrop
-                    drive.actionBuilder(drive1.pose)
-                            .waitSeconds(1)
-                            .strafeToLinearHeading(new Vector2d(-12, 26), Math.toRadians(-115))
-                            .build(),
-                    //waits
-                    drive.actionBuilder(drive05.pose)
-                            .waitSeconds(1)
-                            .build(),
-                    //gate opens
-                    bucket.bgate(),
-                    //moves away from backdrop
-                    drive.actionBuilder(drive1.pose)
-                            .waitSeconds(1)
-                            .strafeToLinearHeading(new Vector2d(-5, -10), Math.toRadians(-85))
-                            .build(),
-                    //bucket gate closes
-                    bucket.bgatein(),
-                    //bucket drops
-                    bucket.bPos1(),
-                    //wait
-                    drive.actionBuilder(drive1.pose)
-                            .waitSeconds(1.5)
-                            .build(),
-                    //lift down
-                    lift.Pos0(),
-
-                    drive.actionBuilder(drive1.pose)
-                            .waitSeconds(1)
-                            .build()
-            ));
-        }
-        else if (OD.getIntLocation() == 2) { // Right
-            Actions.runBlocking(new SequentialAction(
-                    drive.actionBuilder(drive.pose)
-                            .setTangent(0)
-                            .strafeToLinearHeading(new Vector2d(29, 15), Math.toRadians(-65))
-                            .strafeToLinearHeading(new Vector2d(35, 6), Math.toRadians(-65))
-                            .build(),
-
+                    //drop the element
                     intake.AutoIntake_inverse(),
+
+
+                    //this is for left parking
+                    //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
-                            .waitSeconds(1)
+                            .setTangent(0)
+                            .waitSeconds(2)
+                            .strafeToLinearHeading(new Vector2d(-23,35),Math.toRadians(-15))
                             .build()
 
 
-
-                   /* drive.actionBuilder(drive1.pose)
-                            .waitSeconds(2)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(-17.0, 75.0, Math.toRadians(-75)), 0)
-                            .build(),
-
-
-                    drive.actionBuilder(drive2.pose)
-                            .waitSeconds(2)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(0.0, 0.0, Math.toRadians(-75)), 0)
-                            .splineToLinearHeading(new Pose2d(0.0, -80.0, Math.toRadians(-75)), 0)
-                            .build()*/
             ));
-        }
 
 
-
-        else { // Center
+        } if (OD.getIntLocation() == 1) { //Middle Spike
             Actions.runBlocking(new SequentialAction(
                     drive.actionBuilder(drive.pose)
                             .setTangent(0)
-                            .strafeToLinearHeading(new Vector2d(41, 43), Math.toRadians(-65))
-                            .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(-65))
+                            .strafeToLinearHeading(new Vector2d(26, 25), Math.toRadians(-20))
+                            .strafeToLinearHeading(new Vector2d(37, 24), Math.toRadians(-10))
                             .build(),
+                    //drop the element
+                    intake.AutoIntake_inverse(),
 
-                     intake.AutoIntake_inverse(),
 
+                    //this is for left parking
+                    //reposed to 0,0 so this is relative to where the first one ended
                     drive.actionBuilder(drive1.pose)
-                            .waitSeconds(1)
+                            .waitSeconds(2)
+                            .strafeToLinearHeading(new Vector2d(0,-20),Math.toRadians(90))
                             .build()
 
 
-
-                      /*      .waitSeconds(2)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(-17.0, 75.0, Math.toRadians(-75)), 0)
-                            .build(),
-
-
-
-                    drive.actionBuilder(drive2.pose)
-                            .waitSeconds(2)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(0.0, 0.0, Math.toRadians(-75)), 0)
-                            .splineToLinearHeading(new Pose2d(0.0, -80.0, Math.toRadians(-75)), 0)
-                            .build()*/
             ));
-        }
+
+        } if (OD.getIntLocation() == 2) { //right spike
+            Actions.runBlocking(new SequentialAction(
+                    drive.actionBuilder(drive.pose)
+                            .setTangent(0)
+                            .strafeToLinearHeading(new Vector2d(14, 11), Math.toRadians(-20))
+                            .strafeToLinearHeading(new Vector2d(25, 7), Math.toRadians(-30))
+                            .build(),
+                    //drop the element
+                    intake.AutoIntake_inverse(),
+
+
+                    //this is for left parking
+                    //reposed to 0,0 so this is relative to where the first one ended
+                    drive.actionBuilder(drive1.pose)
+                            .waitSeconds(2)
+                            .strafeToLinearHeading(new Vector2d(0, -10), Math.toRadians(10)) //needs to change
+                            .build()
+
+
+            ));
+
+
+
+
         }
     }
-//}
+}
+
+

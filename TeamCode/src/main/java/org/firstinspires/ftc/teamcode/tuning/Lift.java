@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -127,6 +131,33 @@ public class Lift {
         }
 
 
+    }
+
+    public class l0 implements Action {
+        public void init(){
+            Lift_to_Pos(0);
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            Lift_to_Pos(0);
+            return false;
+        }
+    } public class l1 implements Action {
+        public void init(){
+            Lift_to_Pos(1);
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            Lift_to_Pos(1);
+            contorller();
+            return false;
+        }
+    }
+    public Action Pos1() {
+        return new Lift.l1();
+    }
+    public Action Pos0() {
+        return new Lift.l0();
     }
 
 }
