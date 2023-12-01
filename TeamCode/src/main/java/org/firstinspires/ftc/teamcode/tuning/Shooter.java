@@ -1,110 +1,144 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Shooter {
+    final double Shooterready = 0;
+    final double Shootertakeoff = 0.5;
 
-    //declare motors
-    public DcMotor Shooter;
+    final double Downshooterarm = 0;
+    final double UpShooterarm = 0.5;
 
-    //Hardware map stuff
-    HardwareMap hwMap;
-    private ElapsedTime period = new ElapsedTime();
+    ///init to .4
+    private static final double OnShooter = 0.1;
+    private static final double OffShooter = 0;
 
-    private boolean WheelOn = false;
-    private boolean driverOverride = false;
-
-    public double currentPower = 0;
-    public double shooterMaxPower = 0.3;
-    boolean rampingUp = false;
-
-    private static final double INCREMENT = 0.05;
-    private static final double CYCLE = 50;
-
-    private ElapsedTime rampTime = new ElapsedTime();
-    private double rampCurrTime = 0;
+    static boolean ShooteronB = false;
 
 
+    private static final double ClosedShooterArm = 0;
+    private static final double OpenShooterArm = 0.25;
 
-    //constants
+    static boolean ShooterArmclosedB = false;
 
-    //constructor
-    //public Shooter(){
 
-    //}
+    static Servo Shooter;
+    static Servo Shooterarm;
 
-    //init
-    public void init(HardwareMap hwMap) {
+    public enum BucketStartPosition {
+        //Bucket Points In (towards the intake)
+        IN,
+        //Bucket Points Out (towards the backboard)
 
-        Shooter = hwMap.get(DcMotor.class,"Shooter");
-        stopMotor();
-        Shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        OUT
+    }
+
+    public enum BucketGateStartPosition {
+        //Bucket Points In (towards the intake)
+        CLOSE,
+        //Bucket Points Out (towards the backboard)
+
+        OPEN
+    }
+
+    public void init(HardwareMap hwMap, BucketStartPosition BSP, BucketGateStartPosition BGSP) {
+        Shooter = hwMap.get(Servo.class, "Shooter");
+        Shooterarm = hwMap.get(Servo.class, "ShooterArm");
+        Shooter.setPosition(OnShooter);
+        Shooterarm.setPosition(ClosedShooterArm);
+        //     if (BSP == BucketStartPosition.IN) {
+        //         Bucket.setPosition(IntakeSide);
+        //     } else if (BSP == BucketStartPosition.OUT) {
+        //         Bucket.setPosition(OutputSide);
+        //     }
+
+        //     if (BGSP == BucketGateStartPosition.CLOSE) {
+        //         BucketGateIn();
+        //     } else if (BGSP == BucketGateStartPosition.OPEN) {
+        //         BucketGateOut();
+        //     }
 
     }
 
-    public void stopMotor(){
-        currentPower = 0;
-    }
+    //Bucket
 
-    public void setDriverOverride(){
-        driverOverride=true;
-        currentPower = 1;
-    }
+    public void Shooterset(int BucketPos) {
 
-    public void disableDriveOverride(){
-        driverOverride=false;
-        currentPower = 0;
-    }
+        switch (BucketPos) {
+            case 2:
+                Shooter.setPosition(Shooterready);
+                break;
+            case 1: // This is first
+                Shooter.setPosition(Shootertakeoff);
+                break;
 
-    //ramp up
-    //public void startRamp(){
-    // rampingUp = true;
-    //}
-    //public void rampController(){
-    //  if(rampTime.milliseconds()-rampCurrTime >= CYCLE) {
-    //    currentPower += INCREMENT;
-    //  }
-    //if(currentPower>=shooterMaxPower){
-    //  rampingUp = false;
-    //}
-
-    //}
-    //reverse
-
-    public void ManualDrive(double newSpeed){
-        currentPower = newSpeed;
-    }
-
-    //max power
-    public void powerOn(){
-        if(!driverOverride) {
-            currentPower = shooterMaxPower;
         }
     }
-    public void Toggle(){
-        if (WheelOn) {
-            currentPower = 0;
+
+    public static void Readyshooter() {
+        Shooter.setPosition(OffShooter);
+        ShooteronB = true;
+    }
+
+    public static void Takeoffshooter() {
+        Shooter.setPosition(OnShooter);
+        ShooteronB = false;
+    }
+
+
+    public static void ToggleBucket() {
+        if (ShooteronB) {
+            Readyshooter();
         } else {
-            currentPower = shooterMaxPower;
+            Takeoffshooter();
         }
-
     }
 
-    // public void spinnerController(){
-    //sets a variable to control the current action of the motor
-    //     if(currentPower>0 || currentPower<0){
-    //the motor is running. Check if ramping
-    //        if(rampingUp){
-    //            rampController();
-    //        }
+    public static double getBucketPosition() {
+        return Shooter.getPosition();
+    }
 
-    //       WheelOn = true;
-    //    } else{
-    //       WheelOn = false;
-    //      currentPower = 0;
-    // }
-    //  Shooter.setPower(currentPower);
-    //}
+
+    //BucketGate
+
+    public static void ShooterArmOut() {
+        Shooterarm.setPosition(ClosedShooterArm);
+        ShooterArmclosedB = true;
+    }
+
+    public static void ShooterArmIn() {
+        Shooterarm.setPosition(OpenShooterArm);
+        ShooterArmclosedB = false;
+    }
+
+    public static void ToggleBucketGate() {
+        if (ShooterArmclosedB) {
+            Readyshooter();
+        } else {
+            Takeoffshooter();
+        }
+    }
+
+
+    public void BucketGate(int BucketGatePos) {
+
+        switch (BucketGatePos) {
+            case 1:
+                Shooterarm.setPosition(OnShooter);
+                break;
+            case 2:
+                Shooterarm.setPosition(OffShooter);
+                break;
+
+        }
+    }
+
+    public static double getGatePosition() {
+        return Shooterarm.getPosition();
+    }
 }
